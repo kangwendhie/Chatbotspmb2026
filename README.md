@@ -1,4 +1,4 @@
-# 🎓 Chatbot SPMB SMK Bhakti Persada Kendal
+# 🎓 Chatbot SPMB
 
 Aplikasi **Sistem Penerimaan Murid Baru (SPMB)** berbasis **Google Apps Script + Google Sheets + AI Gemini/OpenAI** untuk membantu calon siswa, orang tua, dan panitia memperoleh informasi, melakukan pendaftaran, mengecek status, mendapatkan rekomendasi jurusan, serta memantau statistik melalui dashboard admin.
 
@@ -163,7 +163,7 @@ Buat Spreadsheet baru melalui Google Drive.
 Contoh nama:
 
 ```text
-Database SPMB SMK Bhakti Persada Kendal
+Database SPMB SMK
 ```
 
 ## 2. Buka Google Apps Script
