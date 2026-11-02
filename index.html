@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#174ea6">
+  <title>SPMB - SMK Bhakti Persada Kendal</title>
+  <style>
+    :root{
+      --p:#174ea6;--p2:#0b57d0;--accent:#ffb000;--bg:#f3f7fc;--card:#fff;
+      --text:#172033;--muted:#657084;--line:#dde6f2;--ok:#16803a;--warn:#b45309;
+      --danger:#b42318;--shadow:0 16px 45px rgba(28,65,120,.12)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .topin{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:11px 18px;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;display:grid;place-items:center;font-weight:900;flex:0 0 auto;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:contain;background:#fff}
+    .brand b{display:block}.brand small{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+    .nav button{border:0;background:transparent;border-radius:10px;padding:9px 11px;font-weight:700;color:#4b5870}
+    .nav button.active,.nav button:hover{background:#eaf2ff;color:var(--p)}
+    main{max-width:1180px;margin:22px auto 60px;padding:0 18px}
+    .hero{background:linear-gradient(135deg,#113f91,#0b57d0);color:#fff;border-radius:25px;padding:30px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.35fr .65fr;gap:24px;align-items:center;margin-bottom:20px}
+    .hero h1{font-size:clamp(30px,4.5vw,54px);line-height:1.04;margin:8px 0 12px;letter-spacing:-1px}
+    .hero p{max-width:700px;line-height:1.65;color:#e4edff}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .btn{border:0;border-radius:12px;padding:11px 15px;font-weight:800;background:var(--p);color:#fff}
+    .btn.secondary{background:#eef4ff;color:var(--p)}
+    .btn.light{background:#fff;color:var(--p)}
+    .btn.outline{background:transparent;border:1px solid var(--line);color:var(--text)}
+    .btn.danger{background:var(--danger)}
+    .btn.small{padding:7px 10px;font-size:12px}
+    .hero-stat{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);padding:20px;border-radius:20px}
+    .hero-stat strong{font-size:28px;display:block}
+    .hero-stat span{color:#dbe6ff;font-size:13px}
+    .tab{display:none}.tab.active{display:block}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 8px 24px rgba(20,50,90,.06)}
+    .card h2,.card h3{margin-top:0}.muted{color:var(--muted)}
+    .span-8{grid-column:span 8}.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-12{grid-column:span 12}
+    .chatbox{height:630px;display:flex;flex-direction:column;padding:0;overflow:hidden}
+    .chathead{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:17px 18px;display:flex;align-items:center;justify-content:space-between}
+    .online{font-size:12px;padding:6px 9px;background:rgba(255,255,255,.15);border-radius:999px}
+    .messages{flex:1;overflow:auto;padding:17px;background:linear-gradient(#fbfdff,#f6f9fd)}
+    .msg{display:flex;margin:9px 0}.msg.user{justify-content:flex-end}
+    .bubble{max-width:82%;padding:11px 13px;border-radius:16px;line-height:1.55;white-space:pre-wrap;font-size:14px}
+    .msg.bot .bubble{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+    .msg.user .bubble{background:var(--p2);color:#fff;border-bottom-right-radius:5px}
+    .chat-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .chat-actions button{border:1px solid #cbdcf7;background:#eef5ff;color:var(--p);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+    .quick{display:flex;gap:7px;overflow:auto;padding:10px 13px;border-top:1px solid var(--line);background:#fff}
+    .quick button{white-space:nowrap;border:1px solid #cddcf1;background:#f8fbff;color:var(--p);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
+    .composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}
+    .composer input{flex:1;border:1px solid #cbd5e1;border-radius:12px;padding:12px 13px;outline:none}
+    .composer input:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(11,87,208,.1)}
+    .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:800}
+    .field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #ccd7e5;border-radius:11px;background:#fff;outline:none}
+    .field textarea{min-height:88px;resize:vertical}
+    .check{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#4b5870}.check input{margin-top:3px}
+    .notice{padding:12px 14px;border-radius:12px;background:#edf5ff;border:1px solid #d4e4ff;color:#264f8a;font-size:13px;line-height:1.5}
+    .notice.ok{background:#ecfdf3;border-color:#b7ebca;color:#176834}.notice.warn{background:#fff7ed;border-color:#fed7aa;color:#9a4c0b}
+    .major-list{display:grid;gap:10px}.major{border:1px solid var(--line);border-radius:14px;padding:13px}
+    .major b{color:var(--p)}
+    .pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4ff;color:var(--p);font-size:11px;font-weight:900}
+    .taggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .tag{position:relative}.tag input{position:absolute;opacity:0}
+    .tag label{display:block;border:1px solid #d3deec;border-radius:12px;padding:10px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;background:#fff}
+    .tag input:checked+label{background:#e9f2ff;color:var(--p);border-color:#8bb7f5}
+    .result-card{border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}
+    .score{height:8px;border-radius:999px;background:#e8eef7;overflow:hidden;margin-top:7px}.score i{display:block;height:100%;background:var(--p2)}
+    .status-badge{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#eef3fa}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}.stat strong{font-size:25px;display:block}.stat span{font-size:12px;color:var(--muted)}
+    .barrow{display:grid;grid-template-columns:minmax(120px,1fr) 3fr 45px;gap:9px;align-items:center;margin:9px 0;font-size:12px}
+    .bar{height:10px;background:#edf1f6;border-radius:999px;overflow:hidden}.bar i{height:100%;display:block;background:var(--p2)}
+    .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+    table{width:100%;border-collapse:collapse;min-width:980px;background:#fff;font-size:12px}
+    th,td{padding:10px;border-bottom:1px solid #e8edf4;text-align:left;vertical-align:top}
+    th{position:sticky;top:0;background:#f4f7fb;z-index:1;color:#475569}
+    .adminnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .adminpane{display:none}.adminpane.active{display:block}
+    .loading{opacity:.6;pointer-events:none}
+    .toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#172033;color:#fff;padding:12px 15px;border-radius:12px;box-shadow:var(--shadow);display:none;max-width:360px}
+    .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+    .divider{height:1px;background:var(--line);margin:18px 0}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}.hero-stat{display:none}.nav{display:none}
+      .span-8,.span-4,.span-6{grid-column:span 12}.stats{grid-template-columns:repeat(2,1fr)}
+      .taggrid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:600px){
+      main{padding:0 10px}.topin{padding:10px}.hero{padding:21px;border-radius:18px}
+      .formgrid{grid-template-columns:1fr}.field{grid-column:1/-1}.chatbox{height:70vh}
+      .stats{grid-template-columns:1fr 1fr}.taggrid{grid-template-columns:1fr 1fr}
+      .card{padding:15px;border-radius:16px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topin">
+      <div class="brand">
+        <div class="logo" id="logoBox">BP</div>
+        <div><b id="brandSchool">SMK Bhakti Persada Kendal</b><small id="brandYear">SPMB</small></div>
+      </div>
+      <nav class="nav" id="nav">
+        <button data-tab="chat" class="active">Chatbot</button>
+        <button data-tab="register">Daftar</button>
+        <button data-tab="status">Cek Status</button>
+        <button data-tab="recommend">Rekomendasi</button>
+        <button data-tab="info">Informasi</button>
+        <button data-tab="admin">Admin</button>
+      </nav>
+      <button class="btn secondary small" onclick="setTab('chat')">💬 Chat</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="pill" id="heroPill">SPMB 2027/2028</span>
+        <h1 id="heroTitle">Sistem Penerimaan Murid Baru</h1>
+        <p id="heroText">Informasi, konsultasi jurusan, pendaftaran, dan pengecekan status dalam satu layanan.</p>
+        <div class="hero-actions">
+          <button class="btn light" onclick="setTab('register')">Daftar SPMB</button>
+          <button class="btn secondary" onclick="setTab('recommend')">Coba Rekomendasi Jurusan</button>
+        </div>
+      </div>
+      <div class="hero-stat"><strong id="heroStatus">Memuat...</strong><span id="heroSchedule">Jadwal pendaftaran</span></div>
+    </section>
+
+    <section id="tab-chat" class="tab active">
+      <div class="grid">
+        <div class="card chatbox span-8">
+          <div class="chathead">
+            <div><b>Asisten SPMB AI</b><div style="font-size:12px;opacity:.82">Informasi resmi + AI</div></div>
+            <span class="online">● Online</span>
+          </div>
+          <div class="messages" id="messages"></div>
+          <div class="quick">
+            <button onclick="quickAsk('Apa saja jurusan yang tersedia?')">Jurusan</button>
+            <button onclick="quickAsk('Apa syarat pendaftaran?')">Syarat</button>
+            <button onclick="quickAsk('Kapan jadwal pendaftaran?')">Jadwal</button>
+            <button onclick="quickAsk('Berapa biaya pendaftaran dan apakah ada uang gedung?')">Biaya</button>
+            <button onclick="setTab('status')">Cek Status</button>
+          </div>
+          <form class="composer" id="chatForm">
+            <input id="chatInput" placeholder="Tulis pertanyaan tentang SPMB..." autocomplete="off" maxlength="600">
+            <button class="btn" type="submit">Kirim</button>
+          </form>
+        </div>
+        <aside class="span-4">
+          <div class="card">
+            <h3>Akses Cepat</h3>
+            <p class="muted">Pilih layanan yang Anda perlukan.</p>
+            <div style="display:grid;gap:9px">
+              <button class="btn" onclick="setTab('register')">📝 Daftar SPMB Sekarang</button>
+              <button class="btn secondary" onclick="setTab('status')">🔎 Cek Status Pendaftaran</button>
+              <button class="btn secondary" onclick="setTab('recommend')">🧭 Rekomendasi Jurusan</button>
+              <button class="btn outline" id="waBtn">💚 WhatsApp Panitia</button>
+            </div>
+          </div>
+          <div class="card" style="margin-top:18px">
+            <h3>Program Unggulan</h3>
+            <div class="major-list" id="chatMajors"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="tab-register" class="tab">
+      <div class="grid">
+        <div class="card span-8">
+          <h2>Formulir Calon Siswa</h2>
+          <p class="muted">Isi data dengan benar. Setelah berhasil, sistem memberikan nomor pendaftaran otomatis.</p>
+          <div id="regClosed" class="notice warn" style="display:none">Pendaftaran saat ini ditutup oleh panitia.</div>
+          <form id="regForm" class="formgrid">
+            <div class="field"><label>Nama lengkap *</label><input name="name" required maxlength="100"></div>
+            <div class="field"><label>NISN</label><input name="nisn" inputmode="numeric" maxlength="10" placeholder="10 digit, boleh dikosongkan"></div>
+            <div class="field"><label>Asal sekolah *</label><input name="origin" required maxlength="120"></div>
+            <div class="field"><label>Jenis kelamin</label><select name="gender"><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+            <div class="field"><label>Tempat lahir</label><input name="birthPlace" maxlength="80"></div>
+            <div class="field"><label>Tanggal lahir</label><input name="birthDate" type="date"></div>
+            <div class="field"><label>WhatsApp calon siswa *</label><input name="whatsapp" required inputmode="tel" placeholder="08..."></div>
+            <div class="field"><label>WhatsApp orang tua/wali</label><input name="parentWhatsapp" inputmode="tel" placeholder="08..."></div>
+            <div class="field"><label>Email</label><input name="email" type="email" maxlength="120"></div>
+            <div class="field full"><label>Alamat</label><textarea name="address" maxlength="300"></textarea></div>
+            <div class="field"><label>Pilihan jurusan 1 *</label><select name="choice1" id="choice1" required></select></div>
+            <div class="field"><label>Pilihan jurusan 2</label><select name="choice2" id="choice2"></select></div>
+            <div class="field" style="position:absolute;left:-10000px"><label>Website</label><input name="website" tabindex="-1" autocomplete="off"></div>
+            <div class="field full">
+              <label class="check"><input type="checkbox" name="consent" required> <span id="privacyText">Saya menyetujui penggunaan data untuk proses SPMB dan administrasi sekolah.</span></label>
+            </div>
+            <div class="field full"><button class="btn" id="regSubmit" type="submit">Kirim Pendaftaran</button></div>
+          </form>
+          <div id="regResult" style="margin-top:14px"></div>
+        </div>
+        <aside class="span-4">
+          <div class="card"><h3>Setelah Mendaftar</h3>
+            <ol class="muted" style="line-height:1.8;padding-left:20px">
+              <li>Simpan nomor pendaftaran.</li><li>Pastikan WhatsApp tetap aktif.</li>
+              <li>Pantau status melalui menu Cek Status.</li><li>Ikuti arahan panitia untuk verifikasi/daftar ulang.</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="tab-status" class="tab">
+      <div class="grid">
+        <div class="card span-6">
+          <h2>Cek Status Pendaftaran</h2>
+          <p class="muted">Gunakan nomor pendaftaran dan nomor WhatsApp yang tercatat.</p>
+          <form id="statusForm" class="formgrid">
+            <div class="field full"><label>Nomor Pendaftaran</label><input name="registrationNo" required placeholder="SPMB-2027-000001"></div>
+            <div class="field full"><label>WhatsApp</label><input name="whatsapp" required placeholder="08..."></div>
+            <div class="field full"><button class="btn" type="submit">Cek Status</button></div>
+          </form>
+        </div>
+        <div class="card span-6" id="statusResult">
+          <h3>Hasil Pengecekan</h3><p class="muted">Data status akan tampil di sini.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-recommend" class="tab">
+      <div class="grid">
+        <div class="card span-6">
+          <h2>Rekomendasi Jurusan</h2>
+          <p class="muted">Pilih minimal dua hal yang paling menggambarkan minat atau aktivitas yang Anda sukai.</p>
+          <form id="recForm">
+            <div class="formgrid" style="margin-bottom:14px">
+              <div class="field"><label>Nama (opsional)</label><input name="name" maxlength="100"></div>
+              <div class="field"><label>Asal sekolah (opsional)</label><input name="origin" maxlength="120"></div>
+            </div>
+            <div class="taggrid" id="tagGrid"></div>
+            <button class="btn" style="margin-top:14px" type="submit">Lihat Rekomendasi</button>
+          </form>
+        </div>
+        <div class="card span-6" id="recResult">
+          <h3>Hasil Rekomendasi</h3>
+          <p class="muted">Tiga pilihan teratas akan ditampilkan di sini.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-info" class="tab">
+      <div class="grid">
+        <div class="card span-8">
+          <h2>Program Keahlian</h2><div id="infoMajors" class="major-list"></div>
+        </div>
+        <div class="span-4">
+          <div class="card"><h3>Jadwal SPMB</h3><div id="scheduleInfo"></div></div>
+          <div class="card" style="margin-top:18px"><h3>Informasi Biaya</h3><div id="feeInfo"></div></div>
+          <div class="card" style="margin-top:18px"><h3>Kontak Sekolah</h3><div id="contactInfo" class="muted"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-admin" class="tab">
+      <div id="adminLoginBox" class="card" style="max-width:480px;margin:auto">
+        <h2>Login Administrator</h2><p class="muted">Khusus panitia/administrator SPMB.</p>
+        <form id="adminLoginForm" class="formgrid">
+          <div class="field full"><label>Username</label><input name="username" required autocomplete="username"></div>
+          <div class="field full"><label>Password</label><input name="password" type="password" required autocomplete="current-password"></div>
+          <div class="field full"><button class="btn" type="submit">Login</button></div>
+        </form>
+      </div>
+
+      <div id="adminApp" style="display:none">
+        <div class="adminnav">
+          <button class="btn small" onclick="showAdminPane('dashboard')">Dashboard</button>
+          <button class="btn secondary small" onclick="showAdminPane('applicants')">Pendaftar</button>
+          <button class="btn secondary small" onclick="showAdminPane('settings')">Pengaturan</button>
+          <button class="btn secondary small" onclick="showAdminPane('ai')">AI</button>
+          <button class="btn outline small" onclick="adminLogout()">Keluar</button>
+        </div>
+
+        <div id="admin-dashboard" class="adminpane active">
+          <div class="stats" id="adminStats"></div>
+          <div class="grid" style="margin-top:18px">
+            <div class="card span-6"><h3>Distribusi Pilihan Jurusan</h3><div id="majorBars"></div></div>
+            <div class="card span-6"><h3>Statistik Pertanyaan Chatbot</h3><div id="chatStats"></div></div>
+          </div>
+        </div>
+
+        <div id="admin-applicants" class="adminpane">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+              <div><h2 style="margin-bottom:3px">Data Pendaftar</h2><span class="muted">Maksimal 300 data terbaru ditampilkan.</span></div>
+              <input id="applicantSearch" placeholder="Cari nama / nomor / sekolah..." style="padding:10px;border:1px solid var(--line);border-radius:10px;min-width:270px">
+            </div>
+            <div class="tablewrap" style="margin-top:14px"><table>
+              <thead><tr><th>No. Pendaftaran</th><th>Nama</th><th>Asal</th><th>WA</th><th>Pilihan</th><th>Status</th><th>Catatan</th><th>Aksi</th></tr></thead>
+              <tbody id="applicantRows"></tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <div id="admin-settings" class="adminpane">
+          <div class="card">
+            <h2>Pengaturan SPMB</h2>
+            <form id="settingsForm" class="formgrid"></form>
+          </div>
+          <div class="card" style="margin-top:18px">
+            <h3>Ganti Password Admin</h3>
+            <form id="passwordForm" class="formgrid">
+              <div class="field"><label>Password lama</label><input type="password" name="oldPassword" required></div>
+              <div class="field"><label>Password baru</label><input type="password" name="newPassword" required minlength="10"></div>
+              <div class="field full"><button class="btn" type="submit">Ganti Password</button></div>
+            </form>
+          </div>
+        </div>
+
+        <div id="admin-ai" class="adminpane">
+          <div class="card">
+            <h2>Konfigurasi AI</h2>
+            <div id="aiStatus" class="notice"></div>
+            <form id="aiForm" class="formgrid" style="margin-top:14px">
+              <div class="field"><label>Provider</label><select name="provider"><option value="gemini">Gemini</option><option value="openai">OpenAI</option></select></div>
+              <div class="field"><label>Model</label><input name="model" required></div>
+              <div class="field full"><label>API Key baru</label><input name="apiKey" type="password" placeholder="Kosongkan jika tidak ingin mengganti key"></div>
+              <div class="field full"><label class="check"><input type="checkbox" name="enabled"> Aktifkan AI untuk pertanyaan bebas</label></div>
+              <div class="field full" style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn" type="submit">Simpan Konfigurasi AI</button><button class="btn secondary" type="button" id="testGeminiBtn">Tes Koneksi Gemini</button></div>
+            </form>
+            <div id="aiTestResult" style="margin-top:12px"></div>
+            <p class="muted" style="font-size:12px">API key tidak pernah dikirim kembali ke browser setelah disimpan. Sistem hanya menampilkan status apakah key sudah tersedia.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">SPMB <span id="footerSchool">SMK Bhakti Persada Kendal</span> · <span id="footerVersion"></span></div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const STATE = {
+  cfg:null, majors:[], sessionId:getSessionId(), adminToken:'', adminData:null, adminSettings:null
+};
+
+function getSessionId(){
+  let id = localStorage.getItem('spmb_session_id');
+  if(!id){id='s_'+Date.now()+'_'+Math.random().toString(36).slice(2);localStorage.setItem('spmb_session_id',id)}
+  return id;
+}
+function gs(fn,...args){
+  return new Promise((resolve,reject)=>{
+    const runner=google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error(e.message||String(e))));
+    runner[fn](...args);
+  });
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>t.style.display='none',3200)}
+function bool(v){return ['true','1','yes','ya','aktif'].includes(String(v||'').toLowerCase())}
+function setLoading(el,on){if(el) el.classList.toggle('loading',on)}
+
+async function boot(){
+  try{
+    const data=await gs('getPublicBootstrap');STATE.cfg=data.settings;STATE.majors=data.majors;
+    renderConfig(data);renderMajors();renderSelects();renderTags();
+    addBot(data.settings.WELCOME_TEXT||'Selamat datang di layanan SPMB. Silakan ajukan pertanyaan.');
+  }catch(e){toast(e.message);addBot('Aplikasi belum siap. Administrator perlu menjalankan setupDatabase() pada Google Apps Script.')}
+}
+function renderConfig(data){
+  const s=data.settings||{};
+  document.getElementById('brandSchool').textContent=s.SCHOOL_NAME||'SMK Bhakti Persada Kendal';
+  document.getElementById('brandYear').textContent='SPMB '+(s.ACADEMIC_YEAR||'');
+  document.getElementById('heroPill').textContent='SPMB '+(s.ACADEMIC_YEAR||'');
+  document.getElementById('heroStatus').textContent=data.registrationOpen?'Pendaftaran Dibuka':'Pendaftaran Ditutup';
+  document.getElementById('heroSchedule').textContent=(s.REG_OPEN||'-')+' s.d. '+(s.REG_CLOSE||'-');
+  document.getElementById('footerSchool').textContent=s.SCHOOL_NAME||'';
+  document.getElementById('footerVersion').textContent='v'+data.appVersion;
+  document.getElementById('privacyText').textContent=s.PRIVACY_TEXT||'Saya menyetujui penggunaan data untuk proses SPMB.';
+  const closed=document.getElementById('regClosed');closed.style.display=data.registrationOpen?'none':'block';
+  document.getElementById('regSubmit').disabled=!data.registrationOpen;
+  if(s.LOGO_URL){
+    document.getElementById('logoBox').innerHTML='<img alt="Logo sekolah" src="'+esc(s.LOGO_URL)+'">';
+  }
+  const wa=String(s.WHATSAPP||'').replace(/\D/g,'');
+  document.getElementById('waBtn').onclick=()=>window.open('https://wa.me/'+wa,'_blank','noopener');
+  document.getElementById('scheduleInfo').innerHTML='<p><b>Pembukaan</b><br>'+esc(s.REG_OPEN||'-')+'</p><p><b>Penutupan</b><br>'+esc(s.REG_CLOSE||'-')+'</p><span class="status-badge">'+(data.registrationOpen?'DIBUKA':'DITUTUP')+'</span>';
+  document.getElementById('feeInfo').innerHTML=(bool(s.BUILDING_FEE_FREE)?'<p>✅ <b>BEBAS UANG GEDUNG</b></p>':'')+(bool(s.UNIFORM_FREE)?'<p>✅ <b>GRATIS SERAGAM</b></p>':'')+'<p class="muted">Konfirmasi rincian biaya lain kepada panitia.</p>';
+  document.getElementById('contactInfo').innerHTML='<p><b>Alamat</b><br>'+esc(s.ADDRESS||'-')+'</p><p><b>Telepon</b><br>'+esc(s.PHONE||'-')+'</p><p><b>WhatsApp</b><br>'+esc(s.WHATSAPP||'-')+'</p><p><b>Website</b><br>'+esc(s.WEBSITE||'-')+'</p>';
+}
+function renderMajors(){
+  const compact=STATE.majors.map(m=>'<div class="major"><b>'+esc(m.name)+'</b><div class="muted" style="font-size:12px;margin-top:4px">'+esc(m.description)+'</div></div>').join('');
+  document.getElementById('chatMajors').innerHTML=compact;
+  document.getElementById('infoMajors').innerHTML=compact;
+}
+function renderSelects(){
+  const html='<option value="">Pilih jurusan</option>'+STATE.majors.map(m=>'<option>'+esc(m.name)+'</option>').join('');
+  document.getElementById('choice1').innerHTML=html;document.getElementById('choice2').innerHTML='<option value="">Tidak memilih</option>'+STATE.majors.map(m=>'<option>'+esc(m.name)+'</option>').join('');
+}
+function renderTags(){
+  const tags=['teknologi','komputer','coding','logika','matematika','angka','keuangan','bisnis','teliti','komunikasi','administrasi','organisasi','layanan','dokumen','kesehatan','kimia','biologi','laboratorium','mesin','kendaraan','praktik','fisika','mekanik','desain','sains'];
+  document.getElementById('tagGrid').innerHTML=tags.map((t,i)=>'<div class="tag"><input type="checkbox" id="tg'+i+'" name="tag" value="'+t+'"><label for="tg'+i+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</label></div>').join('');
+}
+function setTab(name){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+function addMsg(text,who='bot',actions=[]){
+  const wrap=document.createElement('div');wrap.className='msg '+who;
+  const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;
+  if(actions&&actions.length){
+    const a=document.createElement('div');a.className='chat-actions';
+    actions.forEach(x=>{const b=document.createElement('button');b.textContent=x.label;b.onclick=()=>x.type==='tab'&&setTab(x.target);a.appendChild(b)});
+    bubble.appendChild(a);
+  }
+  wrap.appendChild(bubble);document.getElementById('messages').appendChild(wrap);
+  document.getElementById('messages').scrollTop=999999;
+}
+function addBot(t,a){addMsg(t,'bot',a)}function addUser(t){addMsg(t,'user')}
+async function quickAsk(q){setTab('chat');document.getElementById('chatInput').value=q;await sendChat()}
+async function sendChat(){
+  const inp=document.getElementById('chatInput'),q=inp.value.trim();if(!q)return;
+  addUser(q);inp.value='';addBot('Sedang memproses...');
+  const container=document.getElementById('messages'),thinking=container.lastElementChild;
+  try{
+    const r=await gs('chatMessage',q,STATE.sessionId);thinking.remove();addBot(r.answer,r.actions||[]);
+  }catch(e){thinking.remove();addBot('Maaf, '+e.message)}
+}
+document.getElementById('chatForm').addEventListener('submit',e=>{e.preventDefault();sendChat()});
+
+document.getElementById('regForm').addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.currentTarget,btn=document.getElementById('regSubmit');
+  const fd=new FormData(f),data=Object.fromEntries(fd.entries());data.consent=fd.get('consent')==='on';
+  setLoading(f,true);btn.disabled=true;
+  try{
+    const r=await gs('submitRegistration',data);
+    if(r.success){
+      document.getElementById('regResult').innerHTML='<div class="notice ok"><b>Pendaftaran berhasil.</b><br>Nomor pendaftaran Anda: <b style="font-size:18px">'+esc(r.registrationNo)+'</b><br>Simpan nomor tersebut untuk cek status.</div>';
+      f.reset();toast('Pendaftaran berhasil disimpan');
+    }else{
+      document.getElementById('regResult').innerHTML='<div class="notice warn">'+esc(r.message)+'<br>Nomor terdaftar: <b>'+esc(r.registrationNo||'-')+'</b></div>';
+    }
+  }catch(err){document.getElementById('regResult').innerHTML='<div class="notice warn">'+esc(err.message)+'</div>'}
+  finally{setLoading(f,false);btn.disabled=STATE.cfg&&!bool(STATE.cfg.REGISTRATION_OPEN)}
+});
+
+document.getElementById('statusForm').addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.currentTarget,fd=new FormData(f);setLoading(f,true);
+  try{
+    const r=await gs('checkRegistrationStatus',fd.get('registrationNo'),fd.get('whatsapp'));
+    const box=document.getElementById('statusResult');
+    if(!r.found) box.innerHTML='<h3>Hasil Pengecekan</h3><div class="notice warn">'+esc(r.message)+'</div>';
+    else box.innerHTML='<h3>Status Pendaftaran</h3><p><span class="status-badge">'+esc(r.status)+'</span></p><p><b>'+esc(r.registrationNo)+'</b><br>'+esc(r.name)+'</p><p><b>Asal sekolah</b><br>'+esc(r.origin)+'</p><p><b>Pilihan 1</b><br>'+esc(r.choice1)+'</p><p><b>Pilihan 2</b><br>'+esc(r.choice2||'-')+'</p>'+(r.note?'<div class="notice"><b>Catatan panitia:</b><br>'+esc(r.note)+'</div>':'');
+  }catch(err){toast(err.message)}finally{setLoading(f,false)}
+});
+
+document.getElementById('recForm').addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.currentTarget,fd=new FormData(f),tags=[...f.querySelectorAll('input[name=tag]:checked')].map(x=>x.value);
+  const data={sessionId:STATE.sessionId,name:fd.get('name'),origin:fd.get('origin'),tags};setLoading(f,true);
+  try{
+    const r=await gs('recommendMajor',data);
+    document.getElementById('recResult').innerHTML='<h3>Hasil Rekomendasi</h3>'+r.top.map((x,i)=>'<div class="result-card"><b>'+(i+1)+'. '+esc(x.name)+'</b><div class="muted" style="font-size:12px;margin-top:4px">'+esc(x.description)+'</div><div class="score"><i style="width:'+x.score+'%"></i></div><small>'+x.score+'% kecocokan relatif</small></div>').join('')+'<div class="notice">'+esc(r.disclaimer)+'</div>';
+  }catch(err){toast(err.message)}finally{setLoading(f,false)}
+});
+
+/* ADMIN */
+document.getElementById('adminLoginForm').addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.currentTarget,fd=new FormData(f);setLoading(f,true);
+  try{
+    const r=await gs('adminLogin',fd.get('username'),fd.get('password'));
+    if(!r.success){toast(r.message);return}
+    STATE.adminToken=r.token;STATE.adminData=r.dashboard;
+    document.getElementById('adminLoginBox').style.display='none';document.getElementById('adminApp').style.display='block';
+    renderAdminDashboard(r.dashboard);await loadAdminSettings();
+  }catch(err){toast(err.message)}finally{setLoading(f,false)}
+});
+function showAdminPane(name){
+  document.querySelectorAll('.adminpane').forEach(x=>x.classList.remove('active'));document.getElementById('admin-'+name).classList.add('active');
+}
+function renderAdminDashboard(d){
+  const s=d.stats;
+  document.getElementById('adminStats').innerHTML=[
+    ['Total Pendaftar',s.total],['Hari Ini',s.today],['Diterima',s.DITERIMA],['Daftar Ulang',s.DAFTAR_ULANG],
+    ['Baru',s.BARU],['Terverifikasi',s.TERVERIFIKASI],['Perbaikan',s.PERBAIKAN_BERKAS],['Ditolak',s.DITOLAK]
+  ].map(x=>'<div class="stat"><strong>'+x[1]+'</strong><span>'+x[0]+'</span></div>').join('');
+  const maxM=Math.max(1,...d.majorDistribution.map(x=>x.count));
+  document.getElementById('majorBars').innerHTML=d.majorDistribution.map(x=>'<div class="barrow"><span>'+esc(x.name)+'</span><div class="bar"><i style="width:'+Math.round(x.count/maxM*100)+'%"></i></div><b>'+x.count+'</b></div>').join('')||'<p class="muted">Belum ada data.</p>';
+  const maxC=Math.max(1,...d.chatStats.intents.map(x=>x.count));
+  document.getElementById('chatStats').innerHTML='<p><b>Total pertanyaan:</b> '+d.chatStats.total+' · <b>Hari ini:</b> '+d.chatStats.today+'</p>'+d.chatStats.intents.map(x=>'<div class="barrow"><span>'+esc(x.name)+'</span><div class="bar"><i style="width:'+Math.round(x.count/maxC*100)+'%"></i></div><b>'+x.count+'</b></div>').join('');
+  renderApplicants(d.applicants,d.statuses);
+  renderAIStatus(d.ai);
+}
+function renderApplicants(rows,statuses){
+  const tb=document.getElementById('applicantRows');
+  tb.innerHTML=rows.map(r=>'<tr data-search="'+esc((r.registrationNo+' '+r.name+' '+r.origin).toLowerCase())+'"><td><b>'+esc(r.registrationNo)+'</b><br><small>'+esc(r.timestamp)+'</small></td><td>'+esc(r.name)+'</td><td>'+esc(r.origin)+'</td><td>'+esc(r.whatsapp)+'</td><td>'+esc(r.choice1)+'<br><small>'+esc(r.choice2||'')+'</small></td><td><select id="st_'+esc(r.registrationNo)+'">'+statuses.map(s=>'<option '+(s===r.status?'selected':'')+'>'+s+'</option>').join('')+'</select></td><td><input id="note_'+esc(r.registrationNo)+'" value="'+esc(r.note)+'" style="width:160px"></td><td><button class="btn small" onclick="saveStatus(\''+esc(r.registrationNo)+'\')">Simpan</button></td></tr>').join('');
+}
+document.getElementById('applicantSearch').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase();document.querySelectorAll('#applicantRows tr').forEach(r=>r.style.display=r.dataset.search.includes(q)?'':'none');
+});
+async function saveStatus(reg){
+  try{
+    const st=document.getElementById('st_'+reg).value,note=document.getElementById('note_'+reg).value;
+    await gs('adminUpdateStatus',STATE.adminToken,reg,st,note);toast('Status '+reg+' diperbarui');
+    STATE.adminData=await gs('getAdminDashboard',STATE.adminToken);renderAdminDashboard(STATE.adminData);
+  }catch(e){toast(e.message)}
+}
+async function loadAdminSettings(){
+  try{
+    const r=await gs('adminGetSettings',STATE.adminToken);STATE.adminSettings=r;renderSettingsForm(r.settings);
+  }catch(e){toast(e.message)}
+}
+function renderSettingsForm(s){
+  const fields=[
+    ['SCHOOL_NAME','Nama sekolah','text'],['ACADEMIC_YEAR','Tahun pelajaran','text'],
+    ['REG_OPEN','Pembukaan pendaftaran','text'],['REG_CLOSE','Penutupan pendaftaran','text'],
+    ['ADDRESS','Alamat sekolah','textarea'],['PHONE','Telepon','text'],['WHATSAPP','WhatsApp','text'],
+    ['WEBSITE','Website','text'],['LOGO_URL','URL Logo','text'],['WELCOME_TEXT','Pesan pembuka chatbot','textarea'],
+    ['CONTACT_TEXT','Pesan kontak','textarea'],['PRIVACY_TEXT','Pemberitahuan privasi','textarea']
+  ];
+  let html=fields.map(x=>'<div class="field '+(x[2]==='textarea'?'full':'')+'"><label>'+x[1]+'</label>'+(x[2]==='textarea'?'<textarea name="'+x[0]+'">'+esc(s[x[0]]||'')+'</textarea>':'<input name="'+x[0]+'" value="'+esc(s[x[0]]||'')+'">')+'</div>').join('');
+  html+='<div class="field"><label>Status Pendaftaran</label><select name="REGISTRATION_OPEN"><option value="TRUE" '+(bool(s.REGISTRATION_OPEN)?'selected':'')+'>Dibuka</option><option value="FALSE" '+(!bool(s.REGISTRATION_OPEN)?'selected':'')+'>Ditutup</option></select></div>';
+  html+='<div class="field"><label>Bebas Uang Gedung</label><select name="BUILDING_FEE_FREE"><option value="TRUE" '+(bool(s.BUILDING_FEE_FREE)?'selected':'')+'>Ya</option><option value="FALSE" '+(!bool(s.BUILDING_FEE_FREE)?'selected':'')+'>Tidak</option></select></div>';
+  html+='<div class="field"><label>Gratis Seragam</label><select name="UNIFORM_FREE"><option value="TRUE" '+(bool(s.UNIFORM_FREE)?'selected':'')+'>Ya</option><option value="FALSE" '+(!bool(s.UNIFORM_FREE)?'selected':'')+'>Tidak</option></select></div>';
+  html+='<div class="field full"><button class="btn" type="submit">Simpan Pengaturan</button></div>';
+  document.getElementById('settingsForm').innerHTML=html;
+}
+document.getElementById('settingsForm').addEventListener('submit',async e=>{
+  e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget).entries());setLoading(e.currentTarget,true);
+  try{await gs('adminSaveSettings',STATE.adminToken,data);toast('Pengaturan disimpan');const fresh=await gs('getPublicBootstrap');STATE.cfg=fresh.settings;STATE.majors=fresh.majors;renderConfig(fresh);renderMajors();renderSelects()}
+  catch(err){toast(err.message)}finally{setLoading(e.currentTarget,false)}
+});
+function renderAIStatus(ai){
+  const box=document.getElementById('aiStatus');
+  const f=document.getElementById('aiForm');
+  if(!box || !f || !ai) return;
+
+  box.innerHTML='<b>Status AI:</b> '+(ai.enabled?'AKTIF':'NONAKTIF')+
+    ' · Provider: '+esc(ai.provider||'-')+
+    '<br>Gemini key: '+(ai.geminiKeyConfigured?'tersedia':'belum ada')+
+    ' · OpenAI key: '+(ai.openaiKeyConfigured?'tersedia':'belum ada');
+
+  const providerEl=f.elements['provider'];
+  const enabledEl=f.elements['enabled'];
+  const modelEl=f.elements['model'];
+
+  if(providerEl) providerEl.value=ai.provider||'gemini';
+  if(enabledEl) enabledEl.checked=!!ai.enabled;
+  if(modelEl){
+    modelEl.value=(ai.provider==='openai' ? ai.openaiModel : ai.geminiModel) || '';
+  }
+}
+const aiProviderSelect=document.querySelector('#aiForm select[name=provider]');
+if(aiProviderSelect){
+  aiProviderSelect.addEventListener('change',e=>{
+    const ai=STATE.adminData && STATE.adminData.ai ? STATE.adminData.ai : null;
+    const modelEl=document.querySelector('#aiForm input[name=model]');
+    if(!ai || !modelEl) return;
+    modelEl.value=e.target.value==='openai' ? (ai.openaiModel||'') : (ai.geminiModel||'');
+  });
+}
+document.getElementById('aiForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  const form=e.currentTarget;
+  const fd=new FormData(form);
+  const enabledEl=form.elements['enabled'];
+  const apiKeyEl=form.elements['apiKey'];
+
+  const data={
+    provider:fd.get('provider') || 'gemini',
+    model:fd.get('model') || '',
+    apiKey:fd.get('apiKey') || '',
+    enabled:enabledEl ? enabledEl.checked : false
+  };
+
+  setLoading(form,true);
+  try{
+    const r=await gs('adminSaveAIConfig',STATE.adminToken,data);
+    if(!STATE.adminData) STATE.adminData={};
+    STATE.adminData.ai=r.status;
+    renderAIStatus(r.status);
+    if(apiKeyEl) apiKeyEl.value='';
+    toast('Konfigurasi AI disimpan');
+  }catch(err){
+    toast(err && err.message ? err.message : String(err));
+  }finally{
+    setLoading(form,false);
+  }
+});
+const testGeminiBtn=document.getElementById('testGeminiBtn');
+if(testGeminiBtn){
+  testGeminiBtn.addEventListener('click',async ()=>{
+    const box=document.getElementById('aiTestResult');
+    box.innerHTML='<div class="notice">Menguji koneksi Gemini...</div>';
+    testGeminiBtn.disabled=true;
+    try{
+      const r=await gs('testGeminiConnection',STATE.adminToken);
+      box.innerHTML='<div class="notice ok"><b>Koneksi berhasil.</b><br>Model: '+esc(r.model)+'<br>Respons: '+esc(r.reply)+'<br>Waktu: '+esc(r.latencyMs)+' ms</div>';
+    }catch(err){
+      box.innerHTML='<div class="notice warn"><b>Koneksi gagal.</b><br>'+esc(err && err.message ? err.message : String(err))+'</div>';
+    }finally{
+      testGeminiBtn.disabled=false;
+    }
+  });
+}
+
+document.getElementById('passwordForm').addEventListener('submit',async e=>{
+  e.preventDefault();const fd=new FormData(e.currentTarget);setLoading(e.currentTarget,true);
+  try{await gs('adminChangePassword',STATE.adminToken,fd.get('oldPassword'),fd.get('newPassword'));e.currentTarget.reset();toast('Password berhasil diganti')}
+  catch(err){toast(err.message)}finally{setLoading(e.currentTarget,false)}
+});
+async function adminLogout(){
+  try{await gs('adminLogout',STATE.adminToken)}catch(e){}
+  STATE.adminToken='';STATE.adminData=null;document.getElementById('adminApp').style.display='none';document.getElementById('adminLoginBox').style.display='block';toast('Anda telah keluar');
+}
+boot();
+</script>
+</body>
+</html>
